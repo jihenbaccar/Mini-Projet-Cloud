@@ -19,10 +19,10 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-cloud-app:latest ./app
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest ./app
 
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-cloud-app:latest
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest
 
     - name: Done
       run: echo "CI/CD terminé avec succès !"
