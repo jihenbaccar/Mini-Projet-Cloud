@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+
+  app:
+    build: ./app
+    depends_on:
+      - db
+      - redis
+    ports:
+    - "5000:5000"
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: tasks
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  redis:
+   image: redis:latest
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
+    command:
+      - '--docker_only=true'
+      - '--housekeeping_interval=10s'
+
+volumes:
+  db-data:
