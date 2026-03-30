@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Mini Projet Cloud
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -18,11 +19,10 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest ./app
+    - name: Build image
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest ./app
 
-    - name: Push Docker image
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest
-
-    - name: Done
-      run: echo "CI/CD terminé avec succès !"
+    - name: Push image
+      run: |
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-projet-cloud:latest
